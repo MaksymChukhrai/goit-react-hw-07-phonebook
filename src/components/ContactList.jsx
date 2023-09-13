@@ -1,21 +1,24 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { removeContact } from '../redux/contactsSlice'; // Импорт экшена removeContact
+import { useSelector } from 'react-redux';
+import { deleteContactApi } from '../services/api'; // Обновленный импорт
 
 const ContactList = () => {
   const contacts = useSelector(state => state.contacts.list);
-  const filter = useSelector(state => state.filter); // Отримання значення фільтру
-  const dispatch = useDispatch();
+  const filter = useSelector(state => state.filter);
 
-  // Фільтруємо контакти на основі фільтру
+
   const filteredContacts = contacts.filter(contact =>
     contact.name.toLowerCase().includes(filter.toLowerCase())
   );
 
-  const handleDelete = (contactId) => {
-    // Используем dispatch для вызова экшена removeContact с передачей id контакта
-    dispatch(removeContact(contactId));
+  const handleDelete = async (contactId) => { // Обновленный обработчик с async
+    try {
+      await deleteContactApi(contactId); // Используем новый экшен
+    } catch (error) {
+      console.error('Failed to delete contact', error);
+    }
   };
+
   return (
     <ul className="contact_list">
       {filteredContacts.map(contact => (
@@ -31,3 +34,4 @@ const ContactList = () => {
 };
 
 export default ContactList;
+
