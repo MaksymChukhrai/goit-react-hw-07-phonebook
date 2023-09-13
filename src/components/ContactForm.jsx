@@ -20,7 +20,7 @@ const ContactForm = () => {
       setNumber('');
     } catch (error) {
       console.error('Failed to add contact:', error);
-      // Здесь вы можете добавить обработку ошибок, например, показать сообщение об ошибке пользователю
+     
     }
   };
 
