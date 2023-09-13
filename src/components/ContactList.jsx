@@ -1,22 +1,19 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { deleteContactApi } from '../services/api'; // Обновленный импорт
+import { useSelector, useDispatch } from 'react-redux';
+import { deleteContactAsync } from '../services/api';
 
 const ContactList = () => {
-  const contacts = useSelector(state => state.contacts.list);
+  const contacts = useSelector(state => state.contacts.items);
   const filter = useSelector(state => state.filter);
-
+  const dispatch = useDispatch();
 
   const filteredContacts = contacts.filter(contact =>
     contact.name.toLowerCase().includes(filter.toLowerCase())
   );
 
-  const handleDelete = async (contactId) => { // Обновленный обработчик с async
-    try {
-      await deleteContactApi(contactId); // Используем новый экшен
-    } catch (error) {
-      console.error('Failed to delete contact', error);
-    }
+  const handleDelete = (contactId) => {
+    // Вызываем асинхронный экшен для удаления контакта
+    dispatch(deleteContactAsync(contactId));
   };
 
   return (

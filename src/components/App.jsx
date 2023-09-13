@@ -4,7 +4,7 @@ import ContactForm from './ContactForm';
 import ContactList from './ContactList';
 import Filter from './Filter';
 
-import { fetchContactsApi, addContactApi, deleteContactApi } from '../services/api'; // Импортируем асинхронные функции из api.js
+import { fetchContacts, addContactAsync, deleteContactAsync } from '../services/api'; // Импортируем асинхронные функции из api.js
 
 const App = () => {
   const dispatch = useDispatch();
@@ -12,24 +12,20 @@ const App = () => {
 
   useEffect(() => {
     // Загрузка контактов из бекенда при монтировании компонента
-    dispatch(fetchContactsApi());
+    dispatch(fetchContacts());
   }, [dispatch]);
 
   const handleAddContact = async contact => {
-    // Добавление контакта в бекенд и обновление Redux-состояния
     try {
-      const addedContact = await addContactApi(contact);
-      dispatch(addContactApi.fulfilled(addedContact));
+      await dispatch(addContactAsync(contact));
     } catch (error) {
       console.error('Failed to add contact:', error);
     }
   };
 
   const handleDeleteContact = async contactId => {
-    // Удаление контакта из бекенда и обновление Redux-состояния
     try {
-      await deleteContactApi(contactId);
-      dispatch(deleteContactApi.fulfilled(contactId));
+      await dispatch(deleteContactAsync(contactId));
     } catch (error) {
       console.error('Failed to delete contact:', error);
     }
@@ -51,4 +47,5 @@ const App = () => {
 };
 
 export default App;
+
 

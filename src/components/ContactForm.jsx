@@ -1,27 +1,24 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContactApi } from '../services/api'; // Импортируем асинхронную функцию addContactApi
+import { addContact } from '../redux/contactsSlice'; // Импортируем экшен для добавления контакта
 
 const ContactForm = () => {
   const dispatch = useDispatch();
-  const isLoading = useSelector(state => state.contacts.isLoading); // Получаем состояние isLoading из Redux
+  const isLoading = useSelector(state => state.contacts.isLoading); // Получаем isLoading из Redux Store
+
+
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
-  const handleSubmit = async e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (name.trim() === '' || number.trim() === '') return;
 
-    // Отправка запроса на добавление контакта в бекенд
-    try {
-      const newContact = await addContactApi({ name, number });
-      dispatch(addContactApi.fulfilled(newContact));
-      setName('');
-      setNumber('');
-    } catch (error) {
-      console.error('Failed to add contact:', error);
-     
-    }
+    // Диспатчим экшен для добавления контакта
+    dispatch(addContact({ name, number }));
+
+    setName('');
+    setNumber('');
   };
 
   return (

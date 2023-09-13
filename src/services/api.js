@@ -1,34 +1,39 @@
-import axios from 'axios';
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-const BASE_URL = 'https://64fdde91596493f7af7eb2c9.mockapi.io/api';
+axios.defaults.baseURL = 'https://64fdde91596493f7af7eb2c9.mockapi.io/api';
 
-export const fetchContactsApi = async () => {
-  try {
-    const response = await axios.get(`${BASE_URL}/contacts`);
-    return response.data;
-  } catch (error) {
-    throw new Error('Failed to fetch contacts');
+export const fetchContacts = createAsyncThunk(
+  "contacts/fetchAll",
+  async (_, thunkAPI) => {
+    try {
+      const response = await axios.get("/contacts");
+      return response.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e.message);
+    }
   }
-};
+);
+export const deleteContactAsync = createAsyncThunk(
+  "contacts/deleteContact",
+  async (contactId, thunkAPI) => {
+    try {
+      await axios.delete(`/contacts/${contactId}`);
 
-export const addContactApi = async (newContact) => {
-  try {
-    const response = await axios.post(`${BASE_URL}/contacts`, newContact, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error('Failed to add contact');
+      return contactId; // Возвращаем идентификатор удаленного контакта
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
   }
-};
-
-export const deleteContactApi = async (deletedContactId) => {
-  try {
-    const response = await axios.delete(`${BASE_URL}/contacts/${deletedContactId}`);
-    return response.data;
-  } catch (error) {
-    throw new Error('Failed to delete contact');
+);
+export const addContactAsync = createAsyncThunk(
+  "contacts/addContact",
+  async (contact, thunkAPI) => {
+    try {
+      const response = await axios.post("/contacts", contact);
+      return response.data; // Возвращаем добавленный контакт
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
   }
-};
+);
