@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from '../redux/contactsSlice'; // Импортируем экшен для добавления контакта
+import { addContactAsync } from '../services/api';// Импортируем экшен для добавления контакта
 
 const ContactForm = () => {
   const dispatch = useDispatch();
@@ -15,7 +15,7 @@ const ContactForm = () => {
     if (name.trim() === '' || number.trim() === '') return;
 
     // Диспатчим экшен для добавления контакта
-    dispatch(addContact({ name, number }));
+    dispatch(addContactAsync({ name, number }));
 
     setName('');
     setNumber('');

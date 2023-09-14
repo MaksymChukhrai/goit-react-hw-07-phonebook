@@ -1,5 +1,5 @@
 import { createSlice} from "@reduxjs/toolkit";
-import { fetchContacts } from "../services/api";
+import { fetchContacts, deleteContactAsync } from '../services/api';
 
 const contactsSlice = createSlice({
     name: "contacts",
@@ -22,9 +22,19 @@ const contactsSlice = createSlice({
         .addCase(fetchContacts.rejected, (state, action) => {
           state.isLoading = false;
           state.error = action.payload;
+        })
+        .addCase(deleteContactAsync.pending, (state) => {
+          // Обработка начала удаления контакта (если нужно)
+        })
+        .addCase(deleteContactAsync.fulfilled, (state, action) => {
+          // Обработка успешного удаления контакта
+          const contactId = action.payload;
+          state.items = state.items.filter((contact) => contact.id !== contactId);
+        })
+        .addCase(deleteContactAsync.rejected, (state, action) => {
+          // Обработка ошибки при удалении контакта (если нужно)
         });
     },
   });
-
-  export const { addContact } = contactsSlice.actions;
+  
   export const contactsReducer = contactsSlice.reducer;
