@@ -1,21 +1,31 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContactAsync } from '../services/api';// Импортируем экшен для добавления контакта
+import { addContactAsync } from '../services/api'; // Импортируем экшен для добавления контакта
+import { addContact } from '../redux/contactsSlice';
 
 const ContactForm = () => {
   const dispatch = useDispatch();
   const isLoading = useSelector(state => state.contacts.isLoading); // Получаем isLoading из Redux Store
 
-
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     if (name.trim() === '' || number.trim() === '') return;
 
-    // Диспатчим экшен для добавления контакта
-    dispatch(addContactAsync({ name, number }));
+    try {
+      const response = await dispatch(addContactAsync({ name, number }));
+
+      if (addContactAsync.fulfilled.match(response)) {
+        // response.payload содержит добавленный контакт
+        const newContact = response.payload;
+
+        dispatch(addContact(newContact));
+      }
+    } catch (error) {
+      console.error('Error adding contact:', error);
+    }
 
     setName('');
     setNumber('');
@@ -44,11 +54,11 @@ const ContactForm = () => {
         />
       </label>
       <button className="number-btn" type="submit" disabled={isLoading}>
-        {isLoading ? 'Adding...' : 'Add contact'} {/* Изменяем надпись на кнопке в зависимости от состояния isLoading */}
+        {isLoading ? 'Adding...' : 'Add contact'}{' '}
+        {/* Изменяем надпись на кнопке в зависимости от состояния isLoading */}
       </button>
     </form>
   );
 };
 
 export default ContactForm;
-

@@ -4,7 +4,11 @@ import ContactForm from './ContactForm';
 import ContactList from './ContactList';
 import Filter from './Filter';
 
-import { fetchContacts, addContactAsync, deleteContactAsync } from '../services/api'; // Импортируем асинхронные функции из api.js
+import {
+  fetchContacts,
+  addContactAsync,
+  deleteContactAsync,
+} from '../services/api'; // Импортируем асинхронные функции из api.js
 
 const App = () => {
   const dispatch = useDispatch();
@@ -33,7 +37,6 @@ const App = () => {
 
   return (
     <div className="book_section">
-
       <h1>Phonebook</h1>
       <ContactForm onAddContact={handleAddContact} />
       <div className="contact_form">
@@ -47,5 +50,3 @@ const App = () => {
 };
 
 export default App;
-
-
